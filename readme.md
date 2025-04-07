@@ -37,35 +37,35 @@ ICRA/
 
 ```
 ## 🛠️ Setup Instructions
-# Step 1: Create and activate environment
+### Step 1: Create and activate environment
 conda create -n icra_robot python=3.10
 conda activate icra_robot
 
-# Step 2: Install dependencies
+### Step 2: Install dependencies
 pip install -r requirements.txt  # Or install manually:
 pip install torch torchvision open3d opencv-python tqdm
 
 
 ## 🚀 Running the Pipeline
-# Step 1: Generate Depth Images from RGB
+### Step 1: Generate Depth Images from RGB
 cd Generate_Voxels
 python get_depth_images.py
 
 Generates .png depth maps from RGB images using Depth Anything V2.
 Requires pretrained weights under checkpoints/depth_anything_v2_base/.
 
-# Step 2: Voxelize RGB-D Data
+### Step 2: Voxelize RGB-D Data
 python pcl_voxelization.py
 
 Produces voxel .npy files for each robot sequence.
 Includes RGB + occupancy information in voxel grid.
 
-# Step 3: Generate Label Dictionary
+### Step 3: Generate Label Dictionary
 python label_dict_robot.py
 
 Outputs label_dict.json used for training.
 
-# Step 4: Train the Perceiver Model
+### Step 4: Train the Perceiver Model
 cd ../Preceiver_model
 python perceiver_training.py
 

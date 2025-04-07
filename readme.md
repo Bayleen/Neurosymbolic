@@ -48,7 +48,7 @@ robot_intention/
 - Optimizer: Adam
 - Learning rate: `1e-4`
 - Batch size: `2`
-- Epochs: `100`
+- Epochs: `1000`
 - Device: NVIDIA RTX 4070 GPU
 
 ## Results

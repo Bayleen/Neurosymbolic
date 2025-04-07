@@ -48,26 +48,26 @@ pip install torch torchvision open3d opencv-python tqdm
 
 ## 🚀 Running the Pipeline
 ### Step 1: Generate Depth Images from RGB
-cd Generate_Voxels
-python get_depth_images.py
+<pre> bash cd Generate_Voxels
+ python pcl_voxelization.py python get_depth_images.py </pre>
 
 Generates .png depth maps from RGB images using Depth Anything V2.
 Requires pretrained weights under checkpoints/depth_anything_v2_base/.
 
 ### Step 2: Voxelize RGB-D Data
-python pcl_voxelization.py
+<pre> python pcl_voxelization.py </pre>
 
 Produces voxel .npy files for each robot sequence.
 Includes RGB + occupancy information in voxel grid.
 
 ### Step 3: Generate Label Dictionary
-python label_dict_robot.py
+<pre> python label_dict_robot.py </pre>
 
 Outputs label_dict.json used for training.
 
 ### Step 4: Train the Perceiver Model
-cd ../Preceiver_model
-python perceiver_training.py
+<pre> cd ../Preceiver_model
+ python perceiver_training.py </pre>
 
 Loads voxel features and labels, trains robot intention classifier.
 Output: perceiver_model.pth and console logs with accuracy/loss.

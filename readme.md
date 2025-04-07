@@ -34,6 +34,8 @@ ICRA/
 │   ├── perceiver_training.py
 │   └── perceiver_model.pth          # Saved model after training
 
+
+```
 ## 🛠️ Setup Instructions
 # Step 1: Create and activate environment
 conda create -n icra_robot python=3.10

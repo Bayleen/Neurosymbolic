@@ -1,66 +1,74 @@
-# Robot Intention Classification with Perceiver Transformer
+# 🤖 Robot Intention Classification – README
 
-This repository contains the implementation of the **robot intention recognition model** from our paper, where voxelized RGB-D inputs are processed via a Perceiver Transformer to classify fine-grained robotic actions.
+This module contains code and data for robot intention classification using voxelized RGB-D inputs and a Perceiver Transformer. It corresponds to the **robot branch** in our ICRA2025 project and complements the human intention module.
 
-## Overview
+---
 
-We propose a voxel-based pipeline that takes RGB-D images of robot demonstrations and outputs one of eight predefined intention classes:
+## 📁 Directory Structure
 
-- `reaching`
-- `grasping`
-- `lifting`
-- `holding`
-- `transporting`
-- `placing`
-- `releasing`
-- `nothing`
-
-The architecture consists of:
-
-1. **Voxelization Module**: Converts RGB-D frames into voxel grids with RGB + occupancy features.
-2. **Perceiver Transformer**: Processes flattened voxel features through cross-attention into latent tokens.
-3. **MLP Classifier**: Maps latent tokens to softmax intention predictions.
-
-## Directory Structure
-
-```
-robot_intention/
+```bash
+ICRA/
+├── dataset_depth/
+│   ├── human/                         # Human demo data from Jie
+│   └── robot/
+│       └── cam_104122061850/
+│           └── pick/
+│               ├── 0004/
+│               ├── 0035/
+│               ├── 0038/
+│               ├── 0044/
+│               └── label_dict.json   # Auto-generated label mapping
 │
-├── perceiver_model.py         # Perceiver transformer model implementation
-├── train.py                   # Training script
-├── utils/
-│   ├── voxel_utils.py         # RGB-D to voxel conversion
-│   ├── loss_utils.py          # Class-weighted loss
-│   └── data_loader.py         # Dataset class
+├── Generate_Voxels/
+│   ├── __pycache__/                  # Auto-generated
+│   ├── checkpoints/
+│   │   ├── depth_anything_v2_base/  # Pretrained model folder
+│   │   └── DAV2/                     # Pretrained weights
+│   ├── get_depth_images.py
+│   ├── pcl_voxelization.py
+│   ├── utilis.py
+│   └── label_dict_robot.py
 │
-├── checkpoints/               # Saved models
-├── results/
-│   ├── perceiver_loss.png     # Loss curve figure
-│   └── perceiver_probs.png    # Softmax probability heatmap
-│
-└── README.md
-```
+├── Preceiver_model/
+│   ├── label_dict.json
+│   ├── perceiver_training.py
+│   └── perceiver_model.pth          # Saved model after training
 
-## Training Details
+## 🛠️ Setup Instructions
+# Step 1: Create and activate environment
+conda create -n icra_robot python=3.10
+conda activate icra_robot
 
-- Dataset: RH20T (robot demonstrations)
-- Input: Voxel grids of shape `(D x H x W x 4)`
-- Optimizer: Adam
-- Learning rate: `1e-4`
-- Batch size: `2`
-- Epochs: `1000`
-- Device: NVIDIA RTX 4070 GPU
+# Step 2: Install dependencies
+pip install -r requirements.txt  # Or install manually:
+pip install torch torchvision open3d opencv-python tqdm
 
-## Results
 
-- Final Test Accuracy: **70.00%**
-- Strong confidence in `nothing`, `holding`
-- Confusion observed in `grasping`, `lifting` due to action similarity
+## 🚀 Running the Pipeline
+# Step 1: Generate Depth Images from RGB
+cd Generate_Voxels
+python get_depth_images.py
 
-Visualizations of training loss and softmax outputs can be found in the `results/` folder.
+Generates .png depth maps from RGB images using Depth Anything V2.
+Requires pretrained weights under checkpoints/depth_anything_v2_base/.
 
-## Future Work
+# Step 2: Voxelize RGB-D Data
+python pcl_voxelization.py
 
-We plan to extend this model to use temporal voxel sequences and integrate it with the human branch for joint correspondence learning. See the full paper for discussion.
+Produces voxel .npy files for each robot sequence.
+Includes RGB + occupancy information in voxel grid.
+
+# Step 3: Generate Label Dictionary
+python label_dict_robot.py
+
+Outputs label_dict.json used for training.
+
+# Step 4: Train the Perceiver Model
+cd ../Preceiver_model
+python perceiver_training.py
+
+Loads voxel features and labels, trains robot intention classifier.
+Output: perceiver_model.pth and console logs with accuracy/loss.
+
 
 
